@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Mail, Phone, MapPin, Loader2 } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 interface ContactFormData {
   name: string;
@@ -19,6 +20,7 @@ interface ContactFormData {
 
 export default function ContactSection() {
   const { toast } = useToast();
+  const { ref, isVisible } = useScrollAnimation();
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
@@ -74,9 +76,14 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-20 bg-white">
+    <section id="contact" className="py-20 bg-white relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <div 
+          ref={ref}
+          className={`text-center mb-16 transition-all duration-800 ${
+            isVisible ? 'animate-slideInUp opacity-100' : 'opacity-0 translate-y-10'
+          }`}
+        >
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Let's Work Together</h2>
           <div className="w-24 h-1 gradient-green-yellow mx-auto rounded-full"></div>
           <p className="text-lg text-gray-600 mt-6 max-w-2xl mx-auto">
@@ -86,12 +93,16 @@ export default function ContactSection() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Information */}
-          <div>
+          <div 
+            className={`transition-all duration-800 ${
+              isVisible ? 'animate-slideInLeft opacity-100' : 'opacity-0 translate-x-[-50px]'
+            }`}
+          >
             <h3 className="text-2xl font-bold text-gray-900 mb-8">Get in Touch</h3>
             
             <div className="space-y-6">
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mr-4">
+              <div className="flex items-center transform hover:scale-105 transition-transform duration-300">
+                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mr-4 hover:bg-emerald-500 transition-colors duration-300">
                   <Mail className="text-white" size={20} />
                 </div>
                 <div>
@@ -100,8 +111,8 @@ export default function ContactSection() {
                 </div>
               </div>
 
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mr-4">
+              <div className="flex items-center transform hover:scale-105 transition-transform duration-300">
+                <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mr-4 hover:bg-amber-500 transition-colors duration-300">
                   <Phone className="text-white" size={20} />
                 </div>
                 <div>
@@ -110,8 +121,8 @@ export default function ContactSection() {
                 </div>
               </div>
 
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mr-4">
+              <div className="flex items-center transform hover:scale-105 transition-transform duration-300">
+                <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mr-4 hover:bg-green-600 transition-colors duration-300">
                   <MapPin className="text-white" size={20} />
                 </div>
                 <div>
@@ -125,13 +136,17 @@ export default function ContactSection() {
               <img 
                 src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" 
                 alt="Professional team meeting in modern office" 
-                className="rounded-xl shadow-lg w-full h-auto"
+                className="rounded-xl shadow-lg w-full h-auto transform hover:scale-105 transition-transform duration-300"
               />
             </div>
           </div>
 
           {/* Contact Form */}
-          <div className="bg-gray-50 p-8 rounded-2xl">
+          <div 
+            className={`bg-gray-50 p-8 rounded-2xl transform hover:shadow-xl transition-all duration-300 ${
+              isVisible ? 'animate-slideInRight opacity-100' : 'opacity-0 translate-x-[50px]'
+            }`}
+          >
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <Label htmlFor="name">Full Name *</Label>

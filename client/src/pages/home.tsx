@@ -6,10 +6,14 @@ import JourneySection from "@/components/journey-section";
 import ServicesSection from "@/components/services-section";
 import ContactSection from "@/components/contact-section";
 import Footer from "@/components/footer";
+import { BackgroundClouds } from "@/components/background-effects";
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
+      {/* Background clouds throughout the site */}
+      <BackgroundClouds />
+      
       <Navigation />
       <HeroSection />
       <AboutSection />
