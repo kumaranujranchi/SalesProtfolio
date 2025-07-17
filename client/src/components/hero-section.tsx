@@ -5,7 +5,6 @@ import { RainEffect } from "@/components/background-effects";
 export default function HeroSection() {
   return (
     <section id="home" className="min-h-screen gradient-green-yellow flex items-center pt-16 relative overflow-hidden">
-      {/* Rain Effect */}
       <RainEffect />
       
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
@@ -42,13 +41,29 @@ export default function HeroSection() {
           </div>
           <div className="flex justify-center lg:justify-end animate-slideInRight">
             <div className="relative">
-              <div className="w-80 h-80 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                <div className="w-64 h-64 bg-white/30 rounded-full flex items-center justify-center">
-                  <div className="w-32 h-32 bg-white/50 rounded-full flex items-center justify-center">
-                    <div className="w-16 h-16 bg-white rounded-full"></div>
-                  </div>
+              {/* Main circular image container */}
+              <div className="relative w-80 h-80 rounded-full overflow-hidden shadow-2xl border-4 border-white/30 backdrop-blur-sm">
+                {/* Concentric circles background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-green-400 via-yellow-400 to-green-500">
+                  <div className="absolute inset-4 rounded-full bg-gradient-to-br from-green-300/80 to-yellow-300/80"></div>
+                  <div className="absolute inset-8 rounded-full bg-gradient-to-br from-green-200/60 to-yellow-200/60"></div>
+                  <div className="absolute inset-12 rounded-full bg-gradient-to-br from-green-100/40 to-yellow-100/40"></div>
+                  <div className="absolute inset-16 rounded-full bg-white/20"></div>
                 </div>
+
+                {/* Your image will go here - replace the src with your image path */}
+                <img
+                  src="/src/assets/images/profile.jpg"
+                  alt="Professional sales and marketing expert"
+                  className="absolute inset-20 w-40 h-40 rounded-full object-cover z-10 border-2 border-white/50"
+                  onError={(e) => {
+                    // Fallback to placeholder if image not found
+                    e.currentTarget.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200";
+                  }}
+                />
               </div>
+
+              {/* Floating decorative elements */}
               <div className="absolute -top-4 -right-4 w-16 h-16 bg-yellow-400 rounded-full animate-float shadow-lg"></div>
               <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-white/40 rounded-full animate-float shadow-lg" style={{ animationDelay: '2s' }}></div>
               <div className="absolute top-1/2 -left-8 w-8 h-8 bg-yellow-300/60 rounded-full animate-float" style={{ animationDelay: '4s' }}></div>
