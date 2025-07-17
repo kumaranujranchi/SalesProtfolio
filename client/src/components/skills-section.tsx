@@ -160,40 +160,40 @@ export default function SkillsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {skills.map((skill, index) => (
-            <div 
+            <div
               key={index}
-              className={`flip-card h-64 transition-all duration-500 ${
+              className={`group relative bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 ${
                 isVisible ? 'animate-slideInUp opacity-100' : 'opacity-0 translate-y-10'
               }`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="flip-card-inner">
-                {/* Front Side */}
-                <div className="flip-card-front bg-white p-6 shadow-lg">
-                  <div className={`w-16 h-16 bg-gradient-to-br ${skill.color} rounded-full flex items-center justify-center mb-4 mx-auto`}>
-                    <skill.icon className="text-white" size={24} />
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{skill.title}</h3>
-                  <p className="text-gray-600 text-sm text-center">{skill.description}</p>
-                </div>
+              {/* Icon */}
+              <div className={`w-16 h-16 bg-gradient-to-br ${skill.color} rounded-full flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300`}>
+                <skill.icon className="text-white" size={24} />
+              </div>
 
-                {/* Back Side */}
-                <div className={`flip-card-back bg-gradient-to-br ${skill.color} p-6 shadow-lg flex flex-col justify-center text-white`}>
-                  <div className="text-center mb-4">
-                    <Star className="w-8 h-8 mx-auto mb-2" />
-                    <h3 className="text-xl font-bold mb-2">{skill.title}</h3>
-                    <p className="text-lg font-semibold opacity-90">{skill.backContent.years}</p>
-                  </div>
-                  <div className="space-y-2">
-                    {skill.backContent.achievements.map((achievement, idx) => (
-                      <div key={idx} className="flex items-center text-sm">
-                        <CheckCircle className="w-4 h-4 mr-2 flex-shrink-0" />
-                        <span>{achievement}</span>
-                      </div>
-                    ))}
-                  </div>
+              {/* Title */}
+              <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">{skill.title}</h3>
+
+              {/* Description */}
+              <p className="text-gray-600 text-sm text-center leading-relaxed">{skill.description}</p>
+
+              {/* Hover overlay with achievements */}
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-900/95 to-gray-800/95 rounded-xl p-6 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-center">
+                <div className="text-center mb-4">
+                  <Star className="w-8 h-8 mx-auto mb-2 text-yellow-400" />
+                  <h3 className="text-xl font-bold mb-2 text-white">{skill.title}</h3>
+                  <p className="text-lg font-semibold text-yellow-400">{skill.backContent.years}</p>
+                </div>
+                <div className="space-y-2">
+                  {skill.backContent.achievements.map((achievement, idx) => (
+                    <div key={idx} className="flex items-center text-sm text-white">
+                      <CheckCircle className="w-4 h-4 mr-2 flex-shrink-0 text-green-400" />
+                      <span>{achievement}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
