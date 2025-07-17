@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Download, Eye } from "lucide-react";
 import { RainEffect } from "@/components/background-effects";
+import profileImage from "@/assets/images/profile.jpg";
 
 export default function HeroSection() {
   return (
@@ -53,7 +54,7 @@ export default function HeroSection() {
 
                 {/* Your image will go here - replace the src with your image path */}
                 <img
-                  src="/src/assets/images/profile.jpg"
+                  src={profileImage}
                   alt="Professional sales and marketing expert"
                   className="absolute inset-20 w-40 h-40 rounded-full object-cover z-10 border-2 border-white/50"
                   onError={(e) => {
