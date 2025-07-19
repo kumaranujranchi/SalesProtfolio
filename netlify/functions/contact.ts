@@ -12,13 +12,19 @@ const insertContactSubmissionSchema = z.object({
 
 // Email configuration
 const createTransporter = () => {
+  // For testing - use hardcoded values if env vars not set
+  const emailUser = process.env.EMAIL_USER || 'anuj.esprit@gmail.com';
+  const emailPass = (process.env.EMAIL_APP_PASSWORD || 'wcuq mnan llvt pcku').replace(/\s/g, '');
+  
+  console.log('Email config:', { user: emailUser, pass: emailPass ? '***' : 'NOT SET' });
+  
   const emailConfig = {
     host: 'smtp.gmail.com',
     port: 587,
     secure: false,
     auth: {
-      user: process.env.EMAIL_USER || 'your-email@gmail.com',
-      pass: (process.env.EMAIL_APP_PASSWORD || 'your-app-password').replace(/\s/g, '')
+      user: emailUser,
+      pass: emailPass
     },
     tls: {
       rejectUnauthorized: false
