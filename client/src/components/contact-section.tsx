@@ -16,6 +16,7 @@ interface ContactFormData {
   company: string;
   service: string;
   message: string;
+  mobile?: string;
 }
 
 export default function ContactSection() {
@@ -26,7 +27,8 @@ export default function ContactSection() {
     email: "",
     company: "",
     service: "",
-    message: ""
+    message: "",
+    mobile: ""
   });
   const [otp, setOtp] = useState("");
   const [showOtpInput, setShowOtpInput] = useState(false);
@@ -77,7 +79,8 @@ export default function ContactSection() {
         email: "",
         company: "",
         service: "",
-        message: ""
+        message: "",
+        mobile: ""
       });
       setOtp("");
       setShowOtpInput(false);
@@ -232,6 +235,18 @@ export default function ContactSection() {
                   value={formData.company}
                   onChange={(e) => handleInputChange("company", e.target.value)}
                   placeholder="Your Company"
+                  className="mt-2"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="mobile">Mobile Number</Label>
+                <Input
+                  id="mobile"
+                  type="tel"
+                  value={formData.mobile}
+                  onChange={(e) => handleInputChange("mobile", e.target.value)}
+                  placeholder="e.g. +1 555 123 4567"
                   className="mt-2"
                 />
               </div>
