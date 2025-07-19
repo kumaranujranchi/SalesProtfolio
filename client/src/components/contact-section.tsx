@@ -14,6 +14,7 @@ interface ContactFormData {
   name: string;
   email: string;
   company: string;
+  mobile: string; // Added mobile number field
   service: string;
   message: string;
 }
@@ -25,6 +26,7 @@ export default function ContactSection() {
     name: "",
     email: "",
     company: "",
+    mobile: "", // Added mobile number field
     service: "",
     message: ""
   });
@@ -76,6 +78,7 @@ export default function ContactSection() {
         name: "",
         email: "",
         company: "",
+        mobile: "", // Reset mobile number
         service: "",
         message: ""
       });
@@ -232,6 +235,18 @@ export default function ContactSection() {
                   value={formData.company}
                   onChange={(e) => handleInputChange("company", e.target.value)}
                   placeholder="Your Company"
+                  className="mt-2"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="mobile">Mobile Number</Label>
+                <Input
+                  id="mobile"
+                  type="tel"
+                  value={formData.mobile}
+                  onChange={(e) => handleInputChange("mobile", e.target.value)}
+                  placeholder="e.g. +1 555 123 4567"
                   className="mt-2"
                 />
               </div>
