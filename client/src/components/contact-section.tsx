@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import { Mail, Phone, MapPin, Loader2 } from "lucide-react";
+import { Mail, Phone, MapPin, Loader2, Shield, CheckCircle } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 
 interface ContactFormData {
@@ -28,17 +28,50 @@ export default function ContactSection() {
     service: "",
     message: ""
   });
+  const [otp, setOtp] = useState("");
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [isOtpSent, setIsOtpSent] = useState(false);
 
-  const contactMutation = useMutation({
+  const requestOtpMutation = useMutation({
     mutationFn: async (data: ContactFormData) => {
-      const response = await apiRequest("POST", "/api/contact", data);
+      const response = await apiRequest("POST", "/api/otp-verification", {
+        ...data,
+        action: "request-otp"
+      });
       return response.json();
     },
     onSuccess: (data) => {
       toast({
-        title: "Message Sent!",
+        title: "OTP Sent!",
+        description: `Verification code sent to ${formData.email}`,
+      });
+      setShowOtpInput(true);
+      setIsOtpSent(true);
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to send OTP. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const verifyOtpMutation = useMutation({
+    mutationFn: async ({ email, otp }: { email: string; otp: string }) => {
+      const response = await apiRequest("POST", "/api/otp-verification", {
+        email,
+        otp,
+        action: "verify-otp"
+      });
+      return response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Message Sent Successfully!",
         description: data.message,
       });
+      // Reset form
       setFormData({
         name: "",
         email: "",
@@ -46,11 +79,14 @@ export default function ContactSection() {
         service: "",
         message: ""
       });
+      setOtp("");
+      setShowOtpInput(false);
+      setIsOtpSent(false);
     },
     onError: (error: any) => {
       toast({
         title: "Error",
-        description: error.message || "Something went wrong. Please try again.",
+        description: error.message || "Invalid OTP. Please try again.",
         variant: "destructive",
       });
     },
@@ -68,7 +104,21 @@ export default function ContactSection() {
       return;
     }
 
-    contactMutation.mutate(formData);
+    if (!showOtpInput) {
+      // Step 1: Request OTP
+      requestOtpMutation.mutate(formData);
+    } else {
+      // Step 2: Verify OTP and submit
+      if (!otp || otp.length !== 6) {
+        toast({
+          title: "Invalid OTP",
+          description: "Please enter the 6-digit verification code.",
+          variant: "destructive",
+        });
+        return;
+      }
+      verifyOtpMutation.mutate({ email: formData.email, otp });
+    }
   };
 
   const handleInputChange = (field: keyof ContactFormData, value: string) => {
@@ -214,20 +264,83 @@ export default function ContactSection() {
                 />
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full gradient-green-yellow text-white py-4 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300"
-                disabled={contactMutation.isPending}
-              >
-                {contactMutation.isPending ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  "Send Message"
-                )}
-              </Button>
+              {!showOtpInput ? (
+                <Button 
+                  type="submit" 
+                  className="w-full gradient-green-yellow text-white py-4 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                  disabled={requestOtpMutation.isPending}
+                >
+                  {requestOtpMutation.isPending ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Sending OTP...
+                    </>
+                  ) : (
+                    <>
+                      <Shield className="w-5 h-5 mr-2" />
+                      Send Verification Code
+                    </>
+                  )}
+                </Button>
+              ) : (
+                <div className="space-y-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex items-center mb-2">
+                      <CheckCircle className="w-5 h-5 text-blue-600 mr-2" />
+                      <span className="text-sm font-medium text-blue-800">Verification Code Sent</span>
+                    </div>
+                    <p className="text-sm text-blue-700">
+                      We've sent a 6-digit verification code to <strong>{formData.email}</strong>. 
+                      Please check your email and enter the code below.
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="otp">Verification Code *</Label>
+                    <Input
+                      id="otp"
+                      type="text"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                      placeholder="Enter 6-digit code"
+                      className="mt-2 text-center text-lg font-mono tracking-widest"
+                      maxLength={6}
+                      required
+                    />
+                  </div>
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full gradient-green-yellow text-white py-4 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                    disabled={verifyOtpMutation.isPending}
+                  >
+                    {verifyOtpMutation.isPending ? (
+                      <>
+                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                        Verifying...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className="w-5 h-5 mr-2" />
+                        Verify & Send Message
+                      </>
+                    )}
+                  </Button>
+                  
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    onClick={() => {
+                      setShowOtpInput(false);
+                      setIsOtpSent(false);
+                      setOtp("");
+                    }}
+                    className="w-full"
+                  >
+                    Back to Form
+                  </Button>
+                </div>
+              )}
             </form>
           </div>
         </div>

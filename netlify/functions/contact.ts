@@ -339,7 +339,7 @@ const createConfirmationEmail = (submission: any) => {
 };
 
 // Send both notification and confirmation emails
-const sendEmails = async (submission: any): Promise<{ notificationSent: boolean; confirmationSent: boolean }> => {
+export const sendEmails = async (submission: any): Promise<{ notificationSent: boolean; confirmationSent: boolean }> => {
   const transporter = createTransporter();
   const emailUser = process.env.EMAIL_USER || 'anuj.esprit@gmail.com';
   
