@@ -118,7 +118,9 @@ const createContactNotificationEmail = (submission: any) => {
 const sendContactNotification = async (submission: any): Promise<boolean> => {
   try {
     const transporter = createTransporter();
-    const emailUser = process.env.EMAIL_USER || 'your-email@gmail.com';
+    const emailUser = process.env.EMAIL_USER || 'anuj.esprit@gmail.com';
+    
+    console.log('Sending email to:', emailUser);
     
     const { subject, html } = createContactNotificationEmail(submission);
     
