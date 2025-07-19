@@ -13,6 +13,7 @@ import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 interface ContactFormData {
   name: string;
   email: string;
+  mobile?: string;
   company: string;
   service: string;
   message: string;
@@ -24,6 +25,7 @@ export default function ContactSection() {
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
+    mobile: "",
     company: "",
     service: "",
     message: ""
@@ -75,6 +77,7 @@ export default function ContactSection() {
       setFormData({
         name: "",
         email: "",
+        mobile: "",
         company: "",
         service: "",
         message: ""
@@ -96,7 +99,7 @@ export default function ContactSection() {
     e.preventDefault();
     
     // Basic validation
-    if (!formData.name || !formData.email || !formData.service || !formData.message) {
+    if (!formData.name || !formData.email || !formData.mobile || !formData.service || !formData.message) {
       toast({
         title: "Please fill in all required fields",
         variant: "destructive",
@@ -219,6 +222,19 @@ export default function ContactSection() {
                   value={formData.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   placeholder="your@email.com"
+                  className="mt-2"
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="mobile">Mobile Number *</Label>
+                <Input
+                  id="mobile"
+                  type="tel"
+                  value={formData.mobile}
+                  onChange={(e) => handleInputChange("mobile", e.target.value.replace(/[^0-9+\-\s]/g, ""))}
+                  placeholder="Your Mobile Number"
                   className="mt-2"
                   required
                 />
