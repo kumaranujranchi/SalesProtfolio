@@ -1,6 +1,15 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import dotenv from "dotenv";
+
+// Load environment variables
+dotenv.config();
+
+// Debug environment variables
+console.log('Environment variables loaded:');
+console.log('EMAIL_USER:', process.env.EMAIL_USER ? 'SET' : 'NOT SET');
+console.log('EMAIL_APP_PASSWORD:', process.env.EMAIL_APP_PASSWORD ? 'SET' : 'NOT SET');
 
 const app = express();
 app.use(express.json());

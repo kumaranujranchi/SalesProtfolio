@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertContactSubmissionSchema } from "@shared/schema";
 import { z } from "zod";
+import { sendContactNotification } from "./email";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Contact form submission endpoint
@@ -11,10 +12,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertContactSubmissionSchema.parse(req.body);
       const submission = await storage.createContactSubmission(validatedData);
       
+      // Send email notification
+      const emailSent = await sendContactNotification(submission);
+      
       res.json({ 
         success: true, 
         message: "Thank you for your message! I'll get back to you soon.",
-        id: submission.id 
+        id: submission.id,
+        emailSent
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -41,6 +46,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         success: false, 
         message: "Failed to retrieve submissions." 
+      });
+    }
+  });
+
+  // Test email endpoint (for development)
+  app.post("/api/test-email", async (req, res) => {
+    try {
+      const { sendTestEmail } = await import("./email");
+      const success = await sendTestEmail();
+      
+      if (success) {
+        res.json({ 
+          success: true, 
+          message: "Test email sent successfully!" 
+        });
+      } else {
+        res.status(500).json({ 
+          success: false, 
+          message: "Failed to send test email. Check your email configuration." 
+        });
+      }
+    } catch (error) {
+      res.status(500).json({ 
+        success: false, 
+        message: "Email test failed. Check your configuration." 
       });
     }
   });
